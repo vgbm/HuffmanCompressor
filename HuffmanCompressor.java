@@ -9,7 +9,7 @@ public class HuffmanCompressor {
 
 	public static void main(String[] args) {
 		
-		huffmanCoder("test.txt","fill in later");
+		huffmanCoder("test (copy).txt","fill in later");
 		
 		/*File inputFile = new File(args[0]);
 		File outputFile = new File(args[1]);

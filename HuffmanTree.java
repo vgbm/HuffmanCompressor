@@ -24,9 +24,9 @@ public class HuffmanTree {
 		
 		try {
 			
-			boolean found;
 			String line="";
 			Scanner fileReader = new Scanner(inputFile);
+			HuffmanNode charNode = null;
 			
 			while(fileReader.hasNext()){
 			
@@ -34,18 +34,16 @@ public class HuffmanTree {
 
 				for(int i = 0; i < line.length(); i++){
 					
-					found=false;
-					
 					for(int j = 0; j < nodeList.size(); j++){
 
-						if(nodeList.get(j).inChar.equals(line.charAt(i))){
-							nodeList.get(j).frequency++;
-							found=true;
+						charNode = findNode(line.charAt(i));
+						if(charNode!=null){
+							charNode.frequency++;
 							break;
 						}	
 					}
-			
-					if(!found){
+
+					if(charNode==null){
 						nodeList.add(new HuffmanNode(line.charAt(i),1));
 					}	
 				}	
@@ -58,6 +56,19 @@ public class HuffmanTree {
 			e.printStackTrace();
 		}
 	}
+
+	
+	private HuffmanNode findNode(Character ch){
+		
+		for(int index = 0; index < nodeList.size(); index++){
+			if(nodeList.get(index).inChar.equals(ch)){
+				return nodeList.get(index);
+			}
+		}
+		return null;
+		
+	}
+	
 	
 	public void makeTree(){
 		
@@ -108,18 +119,18 @@ public class HuffmanTree {
 	public void printTree(HuffmanNode node,int depth){
 
 		if(node.left!=null){
-			System.out.print("\tl ");
+//			System.out.print("\tl ");
 			printTree(node.left, depth+1);
 		}
 		if(node.right!=null){
-			System.out.print("\tr ");
+//			System.out.print("\tr ");
 			printTree(node.right, depth+1);
 		}
 		
 		if(node.inChar!=null)
 			System.out.println(node+"\t"+depth);
 	
-		System.out.print("U ");
+//		System.out.print("U ");
 	}
 	
 	public class HuffmanNode{
