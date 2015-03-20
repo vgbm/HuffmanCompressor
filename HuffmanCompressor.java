@@ -24,8 +24,12 @@ public class HuffmanCompressor {
 		HuffmanTree tree = new HuffmanTree();
 		
 		tree.buildNodeList(inputFile);
-		tree.printList();
+		//tree.printList();
 		
+		tree.makeTree();
+		tree.printTree(tree.root,0);
+		
+		//tree.printList();
 		return "";
 	}
 }
