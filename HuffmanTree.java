@@ -35,19 +35,13 @@ public class HuffmanTree {
 				line = fileReader.nextLine().toLowerCase();
 
 				for(int i = 0; i < line.length(); i++){
-					
-					for(int j = 0; j < nodeList.size(); j++){
 
-						charNode = findNode(line.charAt(i));
-						if(charNode!=null){
-							charNode.frequency++;
-							break;
-						}	
-					}
-
-					if(charNode==null){
+					charNode = findNode(line.charAt(i));
+					if(charNode!=null)
+						charNode.frequency++;
+					else
 						nodeList.add(new HuffmanNode(line.charAt(i),1));
-					}	
+						
 				}	
 			}
 			
@@ -113,9 +107,7 @@ public class HuffmanTree {
 	
 	
 	public void mapEncodings(){
-		
 		setNodeEncodings(root, new StringBuilder(""));
-		
 	}
 	
 	
@@ -132,10 +124,9 @@ public class HuffmanTree {
 		}
 		
 		if(node.inChar!=null){
-			System.out.println(code);
 			node.encoding=code.toString();
 		}
-		//System.out.println(code);
+		
 		if(code.length()>0)
 			code.setLength(code.length()-1);
 		
@@ -186,21 +177,18 @@ public class HuffmanTree {
 	}
 
 	
-	public void printTree(HuffmanNode node,int depth){
+	public void printTree(HuffmanNode node){
 
 		if(node.left!=null){
-//			System.out.print("\tl ");
-			printTree(node.left, depth+1);
+			printTree(node.left);
 		}
 		if(node.right!=null){
-//			System.out.print("\tr ");
-			printTree(node.right, depth+1);
+			printTree(node.right);
 		}
 		
 		if(node.inChar!=null)
-			System.out.println(node+"\t"+depth);
-	
-//		System.out.print("U ");
+			System.out.println(node);
+		
 	}
 	
 	
@@ -219,7 +207,7 @@ public class HuffmanTree {
 		}
 		
 		public String toString(){
-			return "char:\t"+inChar+"\tFrequency:\t"+frequency+"\tEncoding:\t"+encoding;
+			return "Character:\t"+inChar+"\tFrequency:\t"+frequency+"\tEncoding:\t"+encoding;
 		}
 		
 	}
