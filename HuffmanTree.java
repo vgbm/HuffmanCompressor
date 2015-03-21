@@ -10,18 +10,29 @@ import java.util.Scanner;
 
 public class HuffmanTree {
 	
+	//nodeList contains all of the character HuffmanNodes in an ArrayList
+	//buildTreeList is a temp list for making the actual tree
+	
+	//ArrayList was used as I feel like it is easier to manipulate
+	//Also, it makes inserting new nodes more efficient and uses less memory
+	//which I find important for this project
 	ArrayList<HuffmanNode> nodeList, buildTreeList;
+	
+	//root node for the Huffman tree
 	HuffmanNode root;
 	
+	//constructs a new Huffman tree object
 	public HuffmanTree(){
 		nodeList = new ArrayList<HuffmanNode>();
 		buildTreeList = new ArrayList<HuffmanNode>();
 		
-		nodeList.add(new HuffmanNode(' ',0)); // initialize the node list with a character so that its size is >0
 		root = new HuffmanNode(null,-1);
 	}
 	
 	
+	//Fills the nodeList with huffman nodes, one per each new character
+	//Scans the file character by character and either increments frequency or creates a new node
+	//depending on if a node for the character already exists
 	public void buildNodeList(File inputFile){
 		
 		try {
@@ -30,10 +41,17 @@ public class HuffmanTree {
 			Scanner fileReader = new Scanner(inputFile);
 			HuffmanNode charNode = null;
 			
+			//reads the file while it has a next line
 			while(fileReader.hasNext()){
 			
+				//makes each alphabetical char lower case
+				//and reads in the next file line
 				line = fileReader.nextLine().toLowerCase();
 
+				//checks each character in the line to see if
+				//the node list already contains the character
+				//if it does, increment frequency
+				//if not, add a new node with that character
 				for(int i = 0; i < line.length(); i++){
 
 					charNode = findNode(line.charAt(i));
@@ -54,18 +72,25 @@ public class HuffmanTree {
 	}
 
 	
+	//helper method for many methods
+	//returns the node within node list containing a given character
 	private HuffmanNode findNode(Character ch){
 		
 		for(int index = 0; index < nodeList.size(); index++){
+			
+			//checks for equality between the given character and the one contained by the Huffman Node
 			if(nodeList.get(index).inChar.equals(ch)){
+				//if they are equal, return the Huffman Node
 				return nodeList.get(index);
 			}
 		}
-		return null;
+		return null; //returns null if the node cannot be found
 		
 	}
 	
 	
+	//takes the nodeList and uses it to form a Huffman tree
+	//Combines
 	public void makeTree(){
 		
 		buildTreeList = (ArrayList<HuffmanNode>) nodeList.clone();
@@ -170,27 +195,41 @@ public class HuffmanTree {
 	}
 	
 	
-	public void printList(){
-		for(HuffmanNode node: nodeList){
-			System.out.println(node);
-		}
-	}
-
-	
-	public void printTree(HuffmanNode node){
-
-		if(node.left!=null){
-			printTree(node.left);
-		}
-		if(node.right!=null){
-			printTree(node.right);
+	public int bitsSaved(){
+		int huffBits=0, normBits=0;
+		
+		for(int index=0;index<nodeList.size();index++){
+			huffBits+=(nodeList.get(index).encoding.length() * nodeList.get(index).frequency);
+			normBits+=(8 * nodeList.get(index).frequency);
 		}
 		
-		if(node.inChar!=null)
-			System.out.println(node);
-		
+		return normBits-huffBits; 
 	}
 	
+
+	public void outputList(File outputFile){
+		
+		try {
+			
+			BufferedWriter fileOut = new BufferedWriter(new FileWriter(outputFile));
+			for(HuffmanNode node: nodeList){
+				fileOut.write(node+"\n");
+			}
+			fileOut.close();
+			
+		}catch(IOException ex){
+			System.out.println("Cannot output encoding table file");
+			ex.printStackTrace();
+		}
+	}
+	
+	
+//	public void printList(){
+//		for(HuffmanNode node: nodeList){
+//			System.out.println(node);
+//		}
+//	}
+
 	
 	public class HuffmanNode{
 		
