@@ -1,7 +1,10 @@
 package HuffmanEncoder;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,7 +20,6 @@ public class HuffmanTree {
 		nodeList.add(new HuffmanNode(' ',0)); // initialize the node list with a character so that its size is >0
 		root = new HuffmanNode(null,-1);
 	}
-	
 	
 	
 	public void buildNodeList(File inputFile){
@@ -83,14 +85,15 @@ public class HuffmanTree {
 		
 		while(buildTreeList.size()>1){
 			HuffmanNode parentNode = new HuffmanNode(null,0);
-			parentNode.left = popLowestNode();
 			parentNode.right = popLowestNode();
+			parentNode.left = popLowestNode();
 			parentNode.frequency = parentNode.left.frequency + parentNode.right.frequency;
 			buildTreeList.add(parentNode);
 		}
 		
 		root = buildTreeList.get(0);
 	}
+	
 	
 	private HuffmanNode popLowestNode(){
 		
@@ -109,6 +112,72 @@ public class HuffmanTree {
 	}
 	
 	
+	public void mapEncodings(){
+		
+		setNodeEncodings(root, new StringBuilder(""));
+		
+	}
+	
+	
+	private void setNodeEncodings(HuffmanNode node, StringBuilder code){
+		
+		if(node.left!=null){
+			code.append("0");
+			setNodeEncodings(node.left, code);
+		}
+		
+		if(node.right!=null){
+			code.append("1");
+			setNodeEncodings(node.right, code);
+		}
+		
+		if(node.inChar!=null){
+			System.out.println(code);
+			node.encoding=code.toString();
+		}
+		//System.out.println(code);
+		if(code.length()>0)
+			code.setLength(code.length()-1);
+		
+	}
+	
+	
+	public void encodeFile(File inputFile, File outputFile){
+		
+		try {
+			
+			BufferedWriter fileOut = new BufferedWriter(new FileWriter(outputFile));
+			Scanner fileReader = new Scanner(inputFile);
+			String line="";
+			
+			while(fileReader.hasNext()){
+				line = fileReader.nextLine().toLowerCase();
+				fileOut.write(encodeString(line)+"\n");
+			}
+			
+			fileOut.close();
+			fileReader.close();
+			
+		} catch (IOException e) {
+			System.out.println("Cannot input/output file");
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	private String encodeString(String line){
+		
+		StringBuilder encodedLine = new StringBuilder("");
+		
+		for(int chIndex=0; chIndex<line.length(); chIndex++){
+			encodedLine.append(findNode((Character)line.charAt(chIndex)).encoding);
+		}
+		
+		return encodedLine.toString();
+	
+	}
+	
 	
 	public void printList(){
 		for(HuffmanNode node: nodeList){
@@ -116,6 +185,7 @@ public class HuffmanTree {
 		}
 	}
 
+	
 	public void printTree(HuffmanNode node,int depth){
 
 		if(node.left!=null){
@@ -133,6 +203,7 @@ public class HuffmanTree {
 //		System.out.print("U ");
 	}
 	
+	
 	public class HuffmanNode{
 		
 		Character inChar;
@@ -148,7 +219,7 @@ public class HuffmanTree {
 		}
 		
 		public String toString(){
-			return "char:\t"+inChar+"\tFrequency:\t"+frequency;
+			return "char:\t"+inChar+"\tFrequency:\t"+frequency+"\tEncoding:\t"+encoding;
 		}
 		
 	}
