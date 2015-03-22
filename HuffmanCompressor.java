@@ -1,5 +1,3 @@
-package HuffmanEncoder;
-
 import java.io.File;
 
 public class HuffmanCompressor {
